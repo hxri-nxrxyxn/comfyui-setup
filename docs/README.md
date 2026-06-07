@@ -36,7 +36,7 @@ Dockerized ComfyUI with **SageAttention2** baked in, running on Debian/Ubuntu wi
 git clone <this-repo-url> && cd comfyui-setup
 
 # Place models into ./models/ in the expected subdirectories
-# (see [docs/workflows/](docs/workflows/) for per-workflow model requirements)
+# (see [workflows/](workflows/) for per-workflow model requirements)
 
 docker compose up -d --build
 ```
@@ -71,9 +71,9 @@ For non-Turing GPUs, edit the `{"7.5"}` in the Dockerfile `sed` command:
 
 | Workflow | Description |
 |---|---|
-| [Wan2.2 I2V 14B](docs/workflows/wan2.2-i2v-14b.md) | Image-to-video, first+end frame, 4-step LoRA |
+| [Wan2.2 I2V 14B](workflows/wan2.2-i2v-14b.md) | Image-to-video, first+end frame, 4-step LoRA |
 
-*Add more as `docs/workflows/<name>.md` and link them above.*
+*Add more as `workflows/<name>.md` and link them above.*
 
 ---
 
