@@ -14,7 +14,7 @@ WORKDIR /workspace
 
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir "triton>=3.0.0,<3.3.0" GitPython
+RUN pip install --no-cache-dir "triton>=3.0.0,<3.3.0" GitPython toml
 
 RUN git clone https://github.com/gameblabla/SageAttention2.git /tmp/sageattention \
     && cd /tmp/sageattention \
