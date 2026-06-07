@@ -43,16 +43,24 @@ Dockerized ComfyUI with **SageAttention2** baked in, tuned for **Wan2.2 14B imag
 
 ---
 
-## Performance — Wan2.2 I2V 14B (768×768)
+## Performance — Wan2.2 I2V 14B
 
-Tested on single RTX 2080 Ti (22 GB) with `--lowvram`.
+Tested on **single RTX 2080 Ti** (22 GB, compute 7.5) with `--lowvram --use-sage-attention`.
 
-| Workload | Time | Notes |
-|---|---|---|
-| 5-sec video, first frame + end frame | ~5 min | With SageAttention, expandable_segments, lowvram |
-| Same with `--highvram` | OOM | T5 encoder + UNet exceed 22 GB |
-| With SageAttention | ✓ active | Confirmed in logs: `Using sage attention` |
-| Without SageAttention | slower | Falls back to PyTorch attention |
+| Metric | Value |
+|---|---|
+| **Model** | wan2.2_i2v_14B (fp8, high + low noise) |
+| **LoRA** | lightx2v 4-step (high + low noise) |
+| **Output resolution** | 640×640 |
+| **Output duration** | 5.06 sec |
+| **Frame rate** | 16 fps |
+| **Total frames** | 81 |
+| **Output size** | 1.2 MB (H.264) |
+| **Prompt execution time** | **294.25 sec (≈4.9 min)** |
+| **Time per frame** | ~3.6 sec/frame |
+| **SageAttention** | ✓ active (`Using sage attention`) |
+| **VRAM mode** | `--lowvram` |
+| **OOM without lowvram** | `--highvram` fails — T5 encoder + UNet exceed 22 GB |
 
 ---
 
