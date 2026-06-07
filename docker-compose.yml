@@ -19,7 +19,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --lowvram
+      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --lowvram --use-sage-attention
     deploy:
       resources:
         reservations:
