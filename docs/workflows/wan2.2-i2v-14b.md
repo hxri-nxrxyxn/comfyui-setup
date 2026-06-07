@@ -6,14 +6,21 @@ Image-to-video with first frame + end frame, using lightx2v 4-step LoRA.
 
 ## Models Required
 
-| File | Location | Size |
-|---|---|---|
-| `wan2.2_i2v_high_noise_14B_fp8_scaled` | `models/diffusion_models/` | ~27 GB |
-| `wan2.2_i2v_low_noise_14B_fp8_scaled` | `models/diffusion_models/` | (same dir) |
-| `lightx2v_4steps_lora_v1_high_noise` | `models/loras/` | ~2.3 GB |
-| `lightx2v_4steps_lora_v1_low_noise` | `models/loras/` | ~2.3 GB |
-| `umt5_xxl_fp8_e4m3fn_scaled` | `models/text_encoders/` | ~6.3 GB |
-| `wan_2.1_vae` | `models/vae/` | ~243 MB |
+```
+models/
+├── diffusion_models/
+│   ├── wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors  (14 GB)
+│   └── wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors   (14 GB)
+├── text_encoders/
+│   └── umt5_xxl_fp8_e4m3fn_scaled.safetensors             (6.3 GB)
+├── vae/
+│   └── wan_2.1_vae.safetensors                              (243 MB)
+└── loras/
+    ├── wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors  (1.2 GB)
+    └── wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors   (1.2 GB)
+```
+
+**Total: ~37 GB**
 
 ---
 
