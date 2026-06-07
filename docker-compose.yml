@@ -14,7 +14,7 @@ services:
       - ./input:/workspace/input
       - ./custom_nodes:/workspace/custom_nodes
       - ./user:/workspace/user
-      - ./workflows:/workspace/user/default/workflows
+      - ./comfyui_workflows:/workspace/user/default/workflows
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
