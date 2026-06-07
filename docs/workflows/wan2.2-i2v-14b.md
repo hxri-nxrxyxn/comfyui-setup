@@ -32,6 +32,6 @@ SageAttention saves ~2 min per generation. Same quality.
 
 ## Notes
 
-- fp8 models are essential to fit on 22 GB
-- 4-step LoRA is much faster than standard 50-step sampling
-- First frame + end frame conditioning adds ~10–20% overhead vs first frame only
+- fp8 models essential for 22 GB
+- 4-step LoRA much faster than standard 50-step sampling
+- First + end frame conditioning adds ~10–20% overhead

@@ -70,7 +70,7 @@ For non-Turing GPUs, change `{"7.5"}` in the Dockerfile `sed` to your compute ca
 
 - **SageAttention2**: https://github.com/gameblabla/SageAttention2 (Turing fork)
 - **`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`** — prevents VRAM lock after OOM
-- **Workflows saved** in `./comfyui_workflows/` — survives restarts
+- **Workflows saved** in `./workflows/` — survives restarts
 
 ---
 
@@ -78,4 +78,4 @@ For non-Turing GPUs, change `{"7.5"}` in the Dockerfile `sed` to your compute ca
 
 | Workflow | Description |
 |---|---|
-| [Wan2.2 I2V 14B](workflows/wan2.2-i2v-14b.md) | I2V, first+end frame, 4-step LoRA, 640×640, 5 sec |
+| [Wan2.2 I2V 14B](docs/workflows/wan2.2-i2v-14b.md) | I2V, first+end frame, 4-step LoRA, 640×640, 5 sec |

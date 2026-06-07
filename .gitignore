@@ -4,7 +4,7 @@ output/
 input/
 custom_nodes/
 /user/
-/comfyui_workflows/
+/workflows/
 
 # Docker build cache
 __pycache__/
