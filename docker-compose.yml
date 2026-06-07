@@ -13,11 +13,13 @@ services:
       - ./output:/workspace/output
       - ./input:/workspace/input
       - ./custom_nodes:/workspace/custom_nodes
+      - ./user:/workspace/user
+      - ./workflows:/workspace/user/default/workflows
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --lowvram --use-sage-attention
+      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --lowvram
     deploy:
       resources:
         reservations:
