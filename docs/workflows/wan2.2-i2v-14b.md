@@ -28,23 +28,21 @@ models/loras/
 
 ## Performance
 
-Tested on **single RTX 2080 Ti** (22 GB, compute 7.5) with `--lowvram --use-sage-attention`.
+Tested on **single RTX 2080 Ti** (22 GB, compute 7.5) with `--lowvram`.
 
-| Metric | Value |
-|---|---|
-| **Model** | wan2.2_i2v_14B (fp8) |
-| **LoRA** | lightx2v 4-step |
-| **Conditioning** | First frame + end frame |
-| **Output resolution** | 640×640 |
-| **Output duration** | 5.06 sec |
-| **Frame rate** | 16 fps |
-| **Total frames** | 81 |
-| **Output file size** | 1.2 MB (H.264) |
-| **Prompt execution time** | **294.25 sec (≈4.9 min)** |
-| **Time per frame** | ~3.6 sec/frame |
-| **SageAttention** | ✓ active (`Using sage attention`) |
-| **VRAM mode** | `--lowvram` |
-| **OOM without lowvram** | `--highvram` fails — T5 encoder + UNet exceed 22 GB |
+| Metric | SageAttention | PyTorch (baseline) | Delta |
+|---|---|---|---|
+| **Model** | wan2.2_i2v_14B (fp8) | same | — |
+| **LoRA** | lightx2v 4-step | same | — |
+| **Conditioning** | First frame + end frame | same | — |
+| **Output resolution** | 640×640 | same | — |
+| **Output duration** | 5.06 sec | same | — |
+| **Frame rate** | 16 fps | same | — |
+| **Total frames** | 81 | same | — |
+| **Prompt execution** | **294.25 sec** | **407.47 sec** | **+113 sec (+38%)** |
+| **Time per frame** | ~3.6 sec | ~5.0 sec | +1.4 sec |
+| **SageAttention** | ✓ active | ✗ (pytorch fallback) | — |
+| **VRAM mode** | `--lowvram` | `--lowvram` | — |
 
 ---
 

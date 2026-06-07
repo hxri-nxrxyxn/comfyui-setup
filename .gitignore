@@ -3,8 +3,8 @@ models/
 output/
 input/
 custom_nodes/
-user/
-workflows/
+/user/
+/workflows/
 
 # Docker build cache
 __pycache__/
