@@ -1,6 +1,6 @@
-# ComfyUI Setup — Wan2.2 I2V on 22GB
+# ComfyUI Setup
 
-Dockerized ComfyUI with **SageAttention2** baked in, tuned for **Wan2.2 14B image-to-video** on dual RTX 2080 Ti (22 GB each).
+Dockerized ComfyUI with **SageAttention2** baked in, running on Debian/Ubuntu with NVIDIA GPUs.
 
 ---
 
@@ -24,91 +24,61 @@ Dockerized ComfyUI with **SageAttention2** baked in, tuned for **Wan2.2 14B imag
 
 | File | Purpose |
 |---|---|
-| `Dockerfile` | Builds the image: PyTorch 2.4 + CUDA 12.4, ComfyUI, triton 3.0+, SageAttention2 (compiled for SM75) |
-| `docker-compose.yml` | Container config — GPU passthrough, volume mounts, env vars, CLI flags |
-| `entrypoint.sh` | Runtime entry — currently just passes through to ComfyUI (SageAttention is baked into image) |
+| `Dockerfile` | PyTorch 2.4 + CUDA 12.4, ComfyUI, triton 3.0+, SageAttention2 (compiled for SM75) |
+| `docker-compose.yml` | GPU passthrough, volume mounts, env vars, CLI flags |
+| `entrypoint.sh` | Minimal passthrough — all setup baked into image |
 
 ---
 
-## Models Installed
-
-| Model | Type | Size |
-|---|---|---|
-| `wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors` | Diffusion (high noise) | ~27 GB total |
-| `wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors` | Diffusion (low noise) | (same dir) |
-| `wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors` | LoRA — 4-step high noise | ~2.3 GB |
-| `wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors` | LoRA — 4-step low noise | ~2.3 GB |
-| `umt5_xxl_fp8_e4m3fn_scaled.safetensors` | Text encoder (T5-XXL fp8) | ~6.3 GB |
-| `wan_2.1_vae.safetensors` | VAE | ~243 MB |
-
----
-
-## Performance — Wan2.2 I2V 14B
-
-Tested on **single RTX 2080 Ti** (22 GB, compute 7.5) with `--lowvram --use-sage-attention`.
-
-| Metric | Value |
-|---|---|
-| **Model** | wan2.2_i2v_14B (fp8, high + low noise) |
-| **LoRA** | lightx2v 4-step (high + low noise) |
-| **Output resolution** | 640×640 |
-| **Output duration** | 5.06 sec |
-| **Frame rate** | 16 fps |
-| **Total frames** | 81 |
-| **Output size** | 1.2 MB (H.264) |
-| **Prompt execution time** | **294.25 sec (≈4.9 min)** |
-| **Time per frame** | ~3.6 sec/frame |
-| **SageAttention** | ✓ active (`Using sage attention`) |
-| **VRAM mode** | `--lowvram` |
-| **OOM without lowvram** | `--highvram` fails — T5 encoder + UNet exceed 22 GB |
-
----
-
-## How to Use (Restore on a Different Machine)
-
-### Prerequisites
-- Docker + Docker Compose with NVIDIA Container Toolkit
-- NVIDIA GPU with compute capability ≥ 7.5 (Turing or newer)
-- At least 22 GB VRAM for Wan 14B
-
-### Setup
+## Quick Start
 
 ```bash
-# 1. Clone this repo
 git clone <this-repo-url> && cd comfyui-setup
 
-# 2. Download models into ./models/ in the same structure:
-#    models/diffusion_models/
-#    models/text_encoders/
-#    models/vae/
-#    models/loras/
+# Place models into ./models/ in the expected subdirectories
+# (see workflows/ for per-workflow model requirements)
 
-# 3. (Optional) Add custom nodes to ./custom_nodes/
-#    ComfyUI-Manager is recommended
-
-# 4. Build and start
 docker compose up -d --build
-
-# 5. Open http://localhost:8188
 ```
 
-The first build compiles SageAttention2 CUDA kernels — this takes ~5 minutes (one-time). Subsequent starts are instant.
+Open **http://localhost:8188**.
 
-### Tweaking for Your GPU
+The first build compiles SageAttention2 CUDA kernels — takes ~5 minutes. Subsequent starts are instant.
+
+---
+
+## GPU Tuning
 
 Edit `CLI_ARGS` in `docker-compose.yml`:
 
-- **High VRAM (≥24 GB)**: `--highvram` for maximum speed
-- **Medium (16–22 GB)**: `--lowvram` (current config — works reliably)
-- **Low (8–12 GB)**: Keep `--lowvram`; consider fp8 models or smaller resolution
+| VRAM | Flag | Best for |
+|---|---|---|
+| ≥24 GB | `--highvram` | Maximum speed — everything stays in VRAM |
+| 16–22 GB | `--lowvram` (default) | Swaps model parts — fits larger models (Wan, FLUX) |
+| 8–12 GB | `--lowvram` | Use fp8 models, smaller resolutions |
 
-For other architectures, edit the `{"7.5"}` in the Dockerfile `sed` command to match your GPU's compute capability (e.g., `{"8.6"}` for RTX 30-series, `{"8.9"}` for RTX 40-series).
+For non-Turing GPUs, edit the `{"7.5"}` in the Dockerfile `sed` command:
+
+| GPU | Compute Cap | Value |
+|---|---|---|
+| RTX 20-series (Turing) | 7.5 | `{"7.5"}` |
+| RTX 30-series (Ampere) | 8.6 | `{"8.6"}` |
+| RTX 40-series (Ada) | 8.9 | `{"8.9"}` |
 
 ---
 
-## Key Config Details
+## Workflows
+
+| Workflow | Description |
+|---|---|
+| [Wan2.2 I2V 14B](workflows/wan2.2-i2v-14b.md) | Image-to-video, first+end frame, 4-step LoRA |
+
+*Add more as `workflows/<name>.md` and link them above.*
+
+---
+
+## Key Config
 
 - **SageAttention2 fork**: https://github.com/gameblabla/SageAttention2 (modified for Turing)
-- **PyTorch caching**: `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` prevents VRAM from staying locked after OOMs
-- **SageAttention is baked into the image** — compiles once at build time, not on every container start
-- **entrypoint.sh** is intentionally minimal — all setup happens in the Dockerfile
+- **PyTorch caching**: `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` prevents VRAM lock after OOMs
+- **SageAttention** compiled once at build time, not on every container start
