@@ -1,0 +1,9 @@
+# Models (download these separately — too large to version)
+models/
+output/
+input/
+custom_nodes/
+
+# Docker build cache
+__pycache__/
+*.pyc

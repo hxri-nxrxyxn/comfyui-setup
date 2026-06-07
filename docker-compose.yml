@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: comfyui_app
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./models:/workspace/models
+      - ./output:/workspace/output
+      - ./input:/workspace/input
+      - ./custom_nodes:/workspace/custom_nodes
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+      - CLI_ARGS=--listen 0.0.0.0 --port 8188 --lowvram --use-sage-attention
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
